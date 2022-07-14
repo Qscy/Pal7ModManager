@@ -17,6 +17,7 @@ namespace Pal7ModManager
     {
         MyFunctions mf = new MyFunctions();        //实例化函数
         Xml xml = new Xml();
+        Ini ini = new Ini();
         public P7MM()
         {
             InitializeComponent();
@@ -88,11 +89,44 @@ namespace Pal7ModManager
                 }
                 xmlDocument.Save(xml.xmlFileName);
             }
+            ini.iniFileName = Application.StartupPath + "\\P7MM.ini";
+            if(File.Exists(ini.iniFileName))
+            {
+                string index = null;
+                index = ini.IniRead("MAIN", "Platform", ini.iniFileName);
+                try
+                {
+                    this.PlatFormSelection.SelectedIndex = Convert.ToInt32(index);
+                }
+                catch
+                {
+                    this.PlatFormSelection.SelectedIndex = -1;
+                }
+            }
+            else
+            {
+                ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);
+                ini.IniWrite("PATH", "GamePath", mf.GetGamePath(), ini.iniFileName);
+                ini.IniWrite("PATH", "P7MMPath", mf.GetP7MMPath().ToString(), ini.iniFileName);
+                ini.IniWrite("PATH", "ModsPath", ModsPath.ToString(), ini.iniFileName);
+                ini.IniWrite("PATH", "PaksPath", PaksPath.ToString(), ini.iniFileName);
+            }
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-
+            switch (PlatFormSelection.SelectedIndex)
+            {
+                case 0:
+                    ini.IniWrite("PLATFORM", "Platform", "0", ini.iniFileName);
+                    break;
+                case 1:
+                    ini.IniWrite("PLATFORM", "Platform", "1", ini.iniFileName);
+                    break;
+                default:
+                    ini.IniWrite("PLATFORM", "Platform", "-1", ini.iniFileName);
+                    break;
+            }
         }
     }
 }

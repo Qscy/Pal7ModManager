@@ -9,6 +9,9 @@ namespace Pal7ModManager
 {
     class Ini
     {
+        private string _iniFileName = null;
+        public string iniFileName
+        { get { return _iniFileName; } set { _iniFileName = value; } }
         // 声明INI文件的写操作函数 WritePrivateProfileString()
         [System.Runtime.InteropServices.DllImport("kernel32")]
         private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
@@ -19,14 +22,14 @@ namespace Pal7ModManager
 
 
         /// 写入INI的方法
-        public void INIWrite(string section, string key, string value, string path)
+        public void IniWrite(string section, string key, string value, string path)
         {
             // section=配置节点名称，key=键名，value=返回键值，path=路径
             WritePrivateProfileString(section, key, value, path);
         }
 
         //读取INI的方法
-        public string INIRead(string section, string key, string path)
+        public string IniRead(string section, string key, string path)
         {
             // 每次从ini中读取多少字节
             System.Text.StringBuilder temp = new System.Text.StringBuilder(255);
@@ -38,7 +41,7 @@ namespace Pal7ModManager
         }
 
         //删除一个INI文件
-        public void INIDelete(string FilePath)
+        public void IniDelete(string FilePath)
         {
             File.Delete(FilePath);
         }
