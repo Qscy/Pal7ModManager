@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 
 
+//网上很多这样的代码,懒就复制了一个，源码网址：https://blog.csdn.net/weixin_45499836/article/details/118353614  作者：Pass_Time_
+
 namespace Pal7ModManager
 {
     class Ini

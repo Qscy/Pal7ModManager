@@ -24,10 +24,15 @@ namespace Pal7ModManager
         {
             GamePath = Path;
         }
-        public string ModPath(string FileName,string suffix)        //Mod文件夹下的全路径（文件名，后缀）
+        public string ModPath(string FileName,string Extention)        //Mod文件夹下的全路径（文件名，后缀）
         {
-            string mp = GetGamePath() + "\\Mods\\" + FileName + suffix;
+            string mp = GetGamePath() + "\\Mods\\" + FileName + Extention;
             return mp;
+        }
+        public string TargetPath(string FileName, string suffix)        //Paks文件夹下的全路径（文件名，后缀）
+        {
+            string tp = GetGamePath() + "\\Content\\Paks\\" + FileName + suffix;
+            return tp;
         }
         public void ImportMod(string PakPath)       //导入Mod函数（参数：需要导入的Mod所在的全路径）
         {
@@ -38,6 +43,33 @@ namespace Pal7ModManager
             string ModSigPath = ModPath(FileName,".sig");       //复制后的sig文件全路径
             File.Copy(PakPath, ModPakPath, true);
             File.Copy(PakPath, ModSigPath, true);       //复制文件到Mod文件夹
+        }
+        public string ApplyMod(string ModName)
+        {
+            if(File.Exists(ModPath(ModName,".pak")))
+            {
+                if(File.Exists(ModPath(ModName,".sig")))
+                {
+                    File.Copy(ModPath(ModName, ".pak"), TargetPath(ModName, ".pak"),  true);
+                    File.Copy(ModPath(ModName, ".sig"), TargetPath(ModName, ".sig"),  true);
+                    return "应用成功";
+                }
+                else
+                {
+                    foreach(string fileName in Directory.GetFiles(GamePath+"\\Content\\Paks"))
+                    {
+                        if (fileName.Contains("WindowsNoEditor.sig"))
+                        {
+                            File.Copy(fileName, ModPath(ModName,".sig"), true);
+                        }
+                    }
+                    return "应用成功";
+                }
+            }
+            else
+            {
+                return ModName + "不存在";
+            }
         }
     }
 }

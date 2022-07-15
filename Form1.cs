@@ -56,10 +56,10 @@ namespace Pal7ModManager
             {
                 this.ModList.Items.Add("\t"+ModName[i] + "\t\t\t\t\t\t\t\t" + ModLastTime[i].ToString());       //在选择框上显示Mod名称和修改日期
             }
-            List<string> modSelection = new List<string>();
+            List<string> modSelection = new List<string>();         //Mod是否选择的列表
             foreach(object item in ModList.Items)
             {
-                if (ModList.GetSelected(ModList.Items.IndexOf(item)))
+                if (ModList.GetSelected(ModList.Items.IndexOf(item)))       //判断选项是否选中，选中扣1；没选中扣0
                 {
                     modSelection.Add("1");
                 }
@@ -68,12 +68,12 @@ namespace Pal7ModManager
                     modSelection.Add("0");
                 }
             }
-            xml.xmlFileName = Application.StartupPath+ "\\Mods.xml";
+            xml.xmlFileName = Application.StartupPath+ "\\Mods.xml";        //Mod信息写入XML
             XmlDocument xmlDocument = new XmlDocument();
-            if(File.Exists(xml.xmlFileName))
+            if(File.Exists(xml.xmlFileName))        //判断文件是否存在，存在就读、不存在就创建
             {
                 xmlDocument.Load(xml.xmlFileName);
-                xmlDocument.SelectSingleNode("Root").RemoveAll();
+                xmlDocument.SelectSingleNode("Root").RemoveAll();           //先跳转到Root节点
                 for (int i = 0; i < ModName.Count; i++)
                 {
                     xmlDocument = xml.AddModXml(xmlDocument, ModName[i], ModLastTime[i].ToString(), modSelection[i]);
@@ -89,14 +89,14 @@ namespace Pal7ModManager
                 }
                 xmlDocument.Save(xml.xmlFileName);
             }
-            ini.iniFileName = Application.StartupPath + "\\P7MM.ini";
-            if(File.Exists(ini.iniFileName))
+            ini.iniFileName = Application.StartupPath + "\\P7MM.ini";           //ini信息读取和写入
+            if(File.Exists(ini.iniFileName))            //ini文件存在就读不存在就创
             {
                 string index = null;
                 index = ini.IniRead("MAIN", "Platform", ini.iniFileName);
                 try
                 {
-                    this.PlatFormSelection.SelectedIndex = Convert.ToInt32(index);
+                    this.PlatFormSelection.SelectedIndex = Convert.ToInt32(index);          //读0或1，其他数全部当-1
                 }
                 catch
                 {
@@ -105,7 +105,7 @@ namespace Pal7ModManager
             }
             else
             {
-                ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);
+                ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);            //创建默认先为-1（不选择）
                 ini.IniWrite("PATH", "GamePath", mf.GetGamePath(), ini.iniFileName);
                 ini.IniWrite("PATH", "P7MMPath", mf.GetP7MMPath().ToString(), ini.iniFileName);
                 ini.IniWrite("PATH", "ModsPath", ModsPath.ToString(), ini.iniFileName);
@@ -115,18 +115,29 @@ namespace Pal7ModManager
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            switch (PlatFormSelection.SelectedIndex)
+            switch (PlatFormSelection.SelectedIndex)            //ini信息写入
             {
                 case 0:
-                    ini.IniWrite("PLATFORM", "Platform", "0", ini.iniFileName);
+                    ini.IniWrite("MAIN", "Platform", "0", ini.iniFileName);     //0对应0；steam
                     break;
                 case 1:
-                    ini.IniWrite("PLATFORM", "Platform", "1", ini.iniFileName);
+                    ini.IniWrite("MAIN", "Platform", "1", ini.iniFileName);     //1对应1；对应方块
                     break;
                 default:
-                    ini.IniWrite("PLATFORM", "Platform", "-1", ini.iniFileName);
+                    ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);        //其他默认-1；未选择
                     break;
             }
+            List<string> ModsName = new List<string>();
+            string msgBox = null;
+            for(int i = 0; i < ModList.SelectedIndices.Count; i++)
+            {
+                ModsName.Add(ModList.GetItemText(ModList.Items[ModList.SelectedIndices[i]]));
+            }
+            for (int i = 0; i < ModsName.Count; i++)
+            {
+                msgBox += mf.ApplyMod(ModsName[i]);
+            }
+            MessageBox.Show(msgBox);
         }
     }
 }
