@@ -44,11 +44,11 @@ namespace Pal7ModManager
             File.Copy(PakPath, ModPakPath, true);
             File.Copy(PakPath, ModSigPath, true);       //复制文件到Mod文件夹
         }
-        public string ApplyMod(string ModName)
+        public string ApplyMod(string ModName,int Platform)          //应用Mod
         {
-            if(File.Exists(ModPath(ModName,".pak")))
+            if(File.Exists(ModPath(ModName,".pak")))        //如果Mod的pak文件存在
             {
-                if(File.Exists(ModPath(ModName,".sig")))
+                if((File.Exists(ModPath(ModName,".sig"))&&(Platform == 1)))        //并且Mod的sig文件存在,且平台是方块
                 {
                     File.Copy(ModPath(ModName, ".pak"), TargetPath(ModName, ".pak"),  true);
                     File.Copy(ModPath(ModName, ".sig"), TargetPath(ModName, ".sig"),  true);
@@ -56,9 +56,9 @@ namespace Pal7ModManager
                 }
                 else
                 {
-                    foreach(string fileName in Directory.GetFiles(GamePath+"\\Content\\Paks"))
+                    foreach(string fileName in Directory.GetFiles(GamePath+"\\Content\\Paks"))          //sig文件不存在或平台不是方块是steam
                     {
-                        if (fileName.Contains("WindowsNoEditor.sig"))
+                        if (fileName.Contains("WindowsNoEditor.sig"))                           //找一个Paks里的sig改成Mod同名复制
                         {
                             File.Copy(fileName, ModPath(ModName,".sig"), true);
                         }
@@ -66,7 +66,7 @@ namespace Pal7ModManager
                     return "应用成功";
                 }
             }
-            else
+            else        //以上方法都不成功
             {
                 return ModName + "不存在";
             }

@@ -127,17 +127,17 @@ namespace Pal7ModManager
                     ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);        //其他默认-1；未选择
                     break;
             }
-            List<string> ModsName = new List<string>();
+            List<string> ModsName = new List<string>();     //获取被勾选的mod名称
             string msgBox = null;
             for(int i = 0; i < ModList.SelectedIndices.Count; i++)
             {
                 ModsName.Add(ModList.GetItemText(ModList.Items[ModList.SelectedIndices[i]]));
             }
-            for (int i = 0; i < ModsName.Count; i++)
+            for (int i = 0; i < ModsName.Count; i++)        //把勾选的mod复制到Paks
             {
                 msgBox += mf.ApplyMod(ModsName[i]);
             }
-            MessageBox.Show(msgBox);
+            MessageBox.Show(msgBox);        //处理结果信息
         }
     }
 }
