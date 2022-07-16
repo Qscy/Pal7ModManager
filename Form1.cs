@@ -36,25 +36,57 @@ namespace Pal7ModManager
         private void P7MM_Load(object sender, EventArgs e)      //窗体加载时执行
         {
             DirectoryInfo P7MMPath = new DirectoryInfo(Application.StartupPath);        //获取程序路径
-            mf.SetP7MMPath(P7MMPath);
-            mf.SetGamePath(mf.GetP7MMPath().Parent.FullName);       //获取游戏路径
-            DirectoryInfo PaksPath = new DirectoryInfo(mf.GetGamePath() + "\\Content\\Paks");       //Paks文件夹路径
+            mf.P7MMPath = P7MMPath;
+            mf.GamePath = mf.P7MMPath.Parent.FullName;       //获取游戏路径
+            DirectoryInfo ModDirectory = new DirectoryInfo(mf.GamePath + "\\Mods");
+            if (!ModDirectory.Exists)
+            {
+                ModDirectory.Create();
+            }
             //List<List<string>> Mods = new List<List<string>>();
             List<string> ModName = new List<string>();
             List<DateTime> ModLastTime = new List<DateTime>();
-            DirectoryInfo ModsPath = new DirectoryInfo(mf.GetGamePath() + "\\Mods");        //Mods文件夹路径
+            List<bool> ModSelection = new List<bool>();
+            DirectoryInfo PaksPath = new DirectoryInfo(mf.GamePath + "\\Content\\Paks");       //Paks文件夹路径
+            try
+            {
+                foreach (FileInfo File in PaksPath.GetFiles())          //遍历Mods文件夹
+                {
+                    if (!File.Name.ToLower().Contains("windowsnoeditor"))         //过滤游戏文件
+                    {
+                        if (File.Extension.ToLower() == ".pak")         //过滤sig文件
+                        {
+                            string[] Name = File.Name.Split('.');       //去掉后缀
+                            ModName.Add(Name[0]);
+                            ModLastTime.Add(File.LastWriteTime);
+                            ModSelection.Add(true);
+                            mf.ImportMod(File.FullName);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("请将程序文件夹放置在游戏文件夹（Pal7）下！");
+                Application.Exit();
+            }
+            DirectoryInfo ModsPath = new DirectoryInfo(mf.GamePath + "\\Mods");        //Mods文件夹路径
             foreach (FileInfo ModsFile in ModsPath.GetFiles())          //遍历Mods文件夹
             {
                 if (ModsFile.Extension.ToLower() == ".pak")         //后缀为pak时保留
                 {
                     string[] Name = ModsFile.Name.Split('.');       //去掉后缀
-                    ModName.Add(Name[0]);
-                    ModLastTime.Add(ModsFile.LastWriteTime);
+                    if(!ModName.Contains(Name[0]))
+                    {
+                        ModName.Add(Name[0]);
+                        ModLastTime.Add(ModsFile.LastWriteTime);
+                        ModSelection.Add(false);
+                    }
                 }
             }
             for (int i = 0; i < ModName.Count; i++)
             {
-                this.ModList.Items.Add("\t"+ModName[i] + "\t\t\t\t\t\t\t\t" + ModLastTime[i].ToString());       //在选择框上显示Mod名称和修改日期
+                this.ModList.Items.Add(string.Format("\t{0:-20}\t\t\t\t\t\t\t\t{1}", ModName[i], ModLastTime[i].ToString()), ModSelection[i]);       //在选择框上显示Mod名称和修改日期
             }
             List<string> modSelection = new List<string>();         //Mod是否选择的列表
             foreach(object item in ModList.Items)
@@ -106,8 +138,8 @@ namespace Pal7ModManager
             else
             {
                 ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);            //创建默认先为-1（不选择）
-                ini.IniWrite("PATH", "GamePath", mf.GetGamePath(), ini.iniFileName);
-                ini.IniWrite("PATH", "P7MMPath", mf.GetP7MMPath().ToString(), ini.iniFileName);
+                ini.IniWrite("PATH", "GamePath", mf.GamePath, ini.iniFileName);
+                ini.IniWrite("PATH", "P7MMPath", mf.P7MMPath.ToString(), ini.iniFileName);
                 ini.IniWrite("PATH", "ModsPath", ModsPath.ToString(), ini.iniFileName);
                 ini.IniWrite("PATH", "PaksPath", PaksPath.ToString(), ini.iniFileName);
             }
@@ -127,15 +159,27 @@ namespace Pal7ModManager
                     ini.IniWrite("MAIN", "Platform", "-1", ini.iniFileName);        //其他默认-1；未选择
                     break;
             }
-            List<string> ModsName = new List<string>();     //获取被勾选的mod名称
+            List<string> ModsNameNoSelected = new List<string>();           //获取没勾选的mod名称
+            for (int i = 0; i < ModList.SelectedIndices.Count; i++)
+            {
+                if (!ModList.GetSelected(i))
+                {
+                    ModsNameNoSelected.Add(ModList.GetItemText(ModList.Items[i]));
+                }
+            }
+            for (int i = 0; i < ModsNameNoSelected.Count; i++)
+            {
+                mf.DeleteMod(ModsNameNoSelected[i]);        //从Paks删除mod文件
+            }
+            List<string> ModsNameSelected = new List<string>();     //获取被勾选的mod名称
             string msgBox = null;
             for(int i = 0; i < ModList.SelectedIndices.Count; i++)
             {
-                ModsName.Add(ModList.GetItemText(ModList.Items[ModList.SelectedIndices[i]]));
+                ModsNameSelected.Add(ModList.GetItemText(ModList.Items[ModList.SelectedIndices[i]]));
             }
-            for (int i = 0; i < ModsName.Count; i++)        //把勾选的mod复制到Paks
+            for (int i = 0; i < ModsNameSelected.Count; i++)        //把勾选的mod复制到Paks
             {
-                msgBox += mf.ApplyMod(ModsName[i]);
+                msgBox += mf.ApplyMod(ModsNameSelected[i],PlatFormSelection.SelectedIndex);
             }
             MessageBox.Show(msgBox);        //处理结果信息
         }
