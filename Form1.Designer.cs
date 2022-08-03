@@ -70,6 +70,7 @@
             this.About.Name = "About";
             this.About.Size = new System.Drawing.Size(44, 21);
             this.About.Text = "关于";
+            this.About.Click += new System.EventHandler(this.About_Click);
             // 
             // statusStrip2
             // 

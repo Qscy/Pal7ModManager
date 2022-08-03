@@ -195,5 +195,10 @@ namespace Pal7ModManager
             }
             MessageBox.Show(msgBox);        //处理结果信息
         }
+
+        private void About_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("联系我：qscy2022@outlook.com","关于作者");
+        }
     }
 }
