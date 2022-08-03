@@ -62,7 +62,9 @@ namespace Pal7ModManager
                     {
                         if (fileName.ToLower().Contains("windowsnoeditor.sig"))                           //找一个Paks里的sig改成Mod同名复制
                         {
-                            File.Copy(fileName, ModPath(ModName,".sig"), true);
+                            File.Copy(fileName, TargetPath(ModName,".sig"), true);
+                            File.Copy(ModPath(ModName, ".pak"), TargetPath(ModName, ".pak"), true);
+                            break;
                         }
                     }
                     return "应用成功";
@@ -82,7 +84,6 @@ namespace Pal7ModManager
             }
             catch
             {
-                File.Delete(TargetPath(ModName, ".pak"));
             }
         }
     }

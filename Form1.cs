@@ -147,6 +147,11 @@ namespace Pal7ModManager
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
+            if(this.PlatFormSelection.SelectedIndex == -1)
+            {
+                MessageBox.Show("请先选择游戏平台");
+                return;
+            }
             switch (PlatFormSelection.SelectedIndex)            //ini信息写入
             {
                 case 0:
@@ -160,26 +165,33 @@ namespace Pal7ModManager
                     break;
             }
             List<string> ModsNameNoSelected = new List<string>();           //获取没勾选的mod名称
-            for (int i = 0; i < ModList.SelectedIndices.Count; i++)
+            string msgBox = null;
+            for (int i = 0; i < ModList.Items.Count; i++)
             {
-                if (!ModList.GetSelected(i))
+                if (!ModList.GetItemChecked(i))
                 {
                     ModsNameNoSelected.Add(ModList.GetItemText(ModList.Items[i]));
                 }
             }
             for (int i = 0; i < ModsNameNoSelected.Count; i++)
             {
-                mf.DeleteMod(ModsNameNoSelected[i]);        //从Paks删除mod文件
+                string[] temp = ModsNameNoSelected[i].Split('\t');
+                mf.DeleteMod(temp[1]);        //从Paks删除mod文件
+                msgBox += temp[1] + "移除成功\n";
             }
             List<string> ModsNameSelected = new List<string>();     //获取被勾选的mod名称
-            string msgBox = null;
-            for(int i = 0; i < ModList.SelectedIndices.Count; i++)
+            for(int i = 0; i < ModList.CheckedIndices.Count; i++)
             {
-                ModsNameSelected.Add(ModList.GetItemText(ModList.Items[ModList.SelectedIndices[i]]));
+                ModsNameSelected.Add(ModList.GetItemText(ModList.Items[ModList.CheckedIndices[i]]));
             }
             for (int i = 0; i < ModsNameSelected.Count; i++)        //把勾选的mod复制到Paks
             {
-                msgBox += mf.ApplyMod(ModsNameSelected[i],PlatFormSelection.SelectedIndex);
+                string[] temp = ModsNameSelected[i].Split('\t');
+                msgBox +=temp[1]+ mf.ApplyMod(temp[1],PlatFormSelection.SelectedIndex)+"\n";
+            }
+            if(msgBox == null)
+            {
+                msgBox = "未知错误"; 
             }
             MessageBox.Show(msgBox);        //处理结果信息
         }
