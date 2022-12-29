@@ -200,5 +200,20 @@ namespace Pal7ModManager
         {
             MessageBox.Show("联系我：qscy2022@outlook.com","关于作者");
         }
+
+        private void P7MM_MouseEnter(object sender, EventArgs e)
+        {
+            int mouseX = MousePosition.X;
+            int mouseY = MousePosition.Y;
+            if (mouseX>ModList.Location.X && mouseY > ModList.Location.Y && mouseX < ModList.Location.X+767 && mouseY < ModList.Location.Y+399)
+            {
+                ModList.Visible = true;
+            }
+            else
+            {
+                ModList.Visible = false;
+            }
+
+        }
     }
 }

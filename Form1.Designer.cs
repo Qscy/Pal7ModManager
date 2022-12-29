@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(P7MM));
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.ImportMod = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,7 +48,7 @@
             // 
             // menuStrip2
             // 
-            this.menuStrip2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.menuStrip2.BackColor = System.Drawing.Color.Transparent;
             this.menuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ImportMod,
@@ -74,7 +75,7 @@
             // 
             // statusStrip2
             // 
-            this.statusStrip2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.statusStrip2.BackColor = System.Drawing.Color.Transparent;
             this.statusStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.statusStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -95,15 +96,17 @@
             // 
             this.ModList.AllowDrop = true;
             this.ModList.BackColor = System.Drawing.Color.White;
+            this.ModList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ModList.CheckOnClick = true;
             this.ModList.Font = new System.Drawing.Font("等线", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ModList.FormattingEnabled = true;
             this.ModList.Location = new System.Drawing.Point(12, 51);
             this.ModList.Name = "ModList";
             this.ModList.ScrollAlwaysVisible = true;
-            this.ModList.Size = new System.Drawing.Size(767, 403);
+            this.ModList.Size = new System.Drawing.Size(767, 399);
             this.ModList.TabIndex = 2;
             this.ModList.ThreeDCheckBoxes = true;
+            this.ModList.Visible = false;
             // 
             // BtnSave
             // 
@@ -120,7 +123,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("黑体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label1.Location = new System.Drawing.Point(210, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 14);
@@ -130,6 +135,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("黑体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(443, 32);
             this.label2.Name = "label2";
@@ -140,6 +146,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("黑体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.Location = new System.Drawing.Point(588, 32);
             this.label3.Name = "label3";
@@ -150,10 +157,12 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.ForeColor = System.Drawing.Color.Coral;
             this.label4.Location = new System.Drawing.Point(15, 489);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(127, 15);
+            this.label4.Size = new System.Drawing.Size(127, 14);
             this.label4.TabIndex = 5;
             this.label4.Text = "当前游戏版本为：";
             // 
@@ -180,6 +189,7 @@
             // P7MM
             // 
             this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BackgroundImage = global::Pal7ModManager.Properties.Resources._1659592357_254108;
             this.ClientSize = new System.Drawing.Size(791, 545);
             this.Controls.Add(this.PlatFormSelection);
             this.Controls.Add(this.label4);
@@ -190,10 +200,15 @@
             this.Controls.Add(this.ModList);
             this.Controls.Add(this.statusStrip2);
             this.Controls.Add(this.menuStrip2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip2;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "P7MM";
+            this.Opacity = 0.85D;
             this.Text = "Pal7ModManager";
             this.Load += new System.EventHandler(this.P7MM_Load);
+            this.MouseEnter += new System.EventHandler(this.P7MM_MouseEnter);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.statusStrip2.ResumeLayout(false);
